@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GroupController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -21,4 +22,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
-require __DIR__.'/auth.php';
+/* ROTAS GRUPOS */
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+
+    Route::get('/groups/index', [GroupController::class, 'index'])
+        ->middleware('can:create-group')
+        ->name('groups.index');
+
+    Route::get('/groups/create', [GroupController::class, 'create'])
+        ->middleware('can:create-group')
+        ->name('groups.create');
+
+    Route::get('/groups/{grupo}', [GroupController::class, 'show'])
+        ->middleware('can:view-group')
+        ->name('groups.show');
+});
+
+/* end.rotas_grupos */
+
+require __DIR__ . '/auth.php';
